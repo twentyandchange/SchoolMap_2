@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Amish Communities Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .mapboxgl-popup-content {
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            width: 450px;
+            height: 583px;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+        }
+        .popup-content {
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .popup-content h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .popup-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            display: block;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+<div id='map'></div>
+<script>
+    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN_HERE';
+    
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v11',
+        center: [-79.44, 42.19],
+        zoom: 10
+    });
+
+    map.on('load', function() {
+        // Add LOW data source and layer
+        map.addSource('amish-low', {
+            type: 'geojson',
+            data: 'data_low.geojson'
+        });
+
+        map.addLayer({
+            id: 'amish-low-layer',
+            type: 'circle',
+            source: 'amish-low',
+            paint: {
+                'circle-radius': 5,
+                'circle-color': 'rgba(0,85,255,1)',
+                'circle-stroke-color': 'rgba(35,35,35,1)',
+                'circle-stroke-width': 1,
+                'circle-opacity': 1
+            }
+        });
+
+        // Add HIGH data source and layer
+        map.addSource('amish-high', {
+            type: 'geojson',
+            data: 'data_high.geojson'
+        });
+
+        map.addLayer({
+            id: 'amish-high-layer',
+            type: 'circle',
+            source: 'amish-high',
+            paint: {
+                'circle-radius': 5,
+                'circle-color': 'rgba(255,100,0,1)',
+                'circle-stroke-color': 'rgba(35,35,35,1)',
+                'circle-stroke-width': 1,
+                'circle-opacity': 1
+            }
+        });
+
+        const popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            maxWidth: '450px'
+        });
+
+        // Hover handler for LOW layer
+        map.on('mousemove', 'amish-low-layer', function(e) {
+            map.getCanvas().style.cursor = 'pointer';
+
+            const feature = e.features[0];
+            const schoolName = feature.properties['School Nam'] || 'Location';
+            const imagePath = feature.properties['field_9'] || '';
+
+            const popupContent = `
+                <div class="popup-content">
+                    <h3>${schoolName}</h3>
+                    ${imagePath ? `<img src="${imagePath}" alt="${schoolName}">` : '<p>No image available</p>'}
+                </div>
+            `;
+
+            popup.setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+        });
+
+        map.on('mouseleave', 'amish-low-layer', function() {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
+        // Hover handler for HIGH layer
+        map.on('mousemove', 'amish-high-layer', function(e) {
+            map.getCanvas().style.cursor = 'pointer';
+
+            const feature = e.features[0];
+            const schoolName = feature.properties['School Nam'] || 'Location';
+            const imagePath = feature.properties['field_9'] || '';
+
+            const popupContent = `
+                <div class="popup-content">
+                    <h3>${schoolName}</h3>
+                    ${imagePath ? `<img src="${imagePath}" alt="${schoolName}">` : '<p>No image available</p>'}
+                </div>
+            `;
+
+            popup.setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+        });
+
+        map.on('mouseleave', 'amish-high-layer', function() {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+    });
+</script>
+</body>
+</html>
