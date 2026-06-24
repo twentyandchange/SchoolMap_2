@@ -39,9 +39,39 @@
             display: block;
             flex-grow: 1;
         }
+
+            body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+#header {
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 10px;
+}
+
+#map-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#map-subtitle {
+    margin: 5px 0 0 0;
+    font-size: 16px;
+    color: #555;
+}
+
+#map {
+    width: 100%;
+    height: calc(100vh - 90px);
+}
     </style>
 </head>
 <body>
+<h1 id="map-title">Hover over schools to see graph of reported measles vaccination rates</h1>
+<p id="map-subtitle">Note: location of schools is approximate</p>
 <div id='map'></div>
 <script>
     mapboxgl.accessToken = 'pk.eyJ1Ijoic2tpbGJ1cm4xIiwiYSI6ImNtNWc1NHNiNDA0b2EybW9yYmI4Y3BraDEifQ.lY6x_-SYoY__Pq1ybqEAQQ';
