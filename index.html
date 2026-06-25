@@ -12,8 +12,8 @@
             padding: 0;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            width: 338px;
-            height: 437px;
+            width: 406px;
+            height: 524px;
             max-width: 450px;
             display: flex;
             flex-direction: column;
@@ -82,10 +82,13 @@ body {
 
 <div id="header">
     <h1 id="map-title">
-        Hover over schools to see graph of reported measles vaccination rates
+        Hover mouse over schools to see graph of reported measles vaccination rates
     </h1>
     <p id="map-subtitle">
-        Note: location of schools is approximate
+        Location of schools is approximate
+    </p>
+    <p id="map-subtitle">
+        Note: if graph does not appear upon, drag the map up on the screen and try again.
     </p>
 </div>
 
@@ -142,7 +145,7 @@ body {
         const popup = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
-            maxWidth: '338px'
+            maxWidth: '406px'
         });
 
         // Hover handler for LOW layer
